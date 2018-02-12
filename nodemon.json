@@ -1,0 +1,12 @@
+{
+  "verbose": true,
+  "ignore": [
+    "node_modules/*",
+    ".next/*",
+    "mongo/*",
+    "pages/*",
+    "components/*.js"
+  ],
+  "watch": ["db/*.js", "rest/*.js", "app.js", "config.js", "_document.js"],
+  "ext": "js"
+}
