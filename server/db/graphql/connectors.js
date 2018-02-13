@@ -7,13 +7,13 @@ const auth = require('../../auth');
  */
 class Articles {
   constructor() {
-    this.readArticles = (skip, limit) => {
-      const articles = ArticleModel.find({})
+    this.readArticles = async (skip, limit) => {
+      const articles = await ArticleModel.find({})
         .populate('author')
         .sort({ _id: -1 })
         .limit(limit)
         .skip(skip)
-        .exec((err, data) => data);
+        .exec();
       return articles;
     };
   }
@@ -25,10 +25,10 @@ class Articles {
  */
 class Article {
   constructor() {
-    this.readArticle = id => {
-      const article = ArticleModel.findOne({ _id: id })
+    this.readArticle = async id => {
+      const article = await ArticleModel.findOne({ _id: id })
         .populate('author')
-        .exec((err, data) => data);
+        .exec();
       return article;
     };
   }
@@ -40,11 +40,11 @@ class Article {
  */
 class PostLike {
   constructor() {
-    this.upvote = (id, likes) => {
-      const article = ArticleModel.findOneAndUpdate(
+    this.upvote = async (id, likes) => {
+      const article = await ArticleModel.findOneAndUpdate(
         { _id: id },
         { likes: likes }
-      ).exec((err, data) => data);
+      ).exec();
       return article;
     };
   }
