@@ -13,12 +13,17 @@ export default ComposedComponent => {
     static displayName = `WithData(${getComponentDisplayName(
       ComposedComponent
     )})`;
+
     static propTypes = {
       serverState: PropTypes.object.isRequired,
     };
 
     static async getInitialProps(ctx) {
-      let serverState = {};
+      let serverState = {
+        apollo: {
+          data: {},
+        },
+      };
 
       let composedInitialProps = {};
       if (ComposedComponent.getInitialProps) {
@@ -32,15 +37,22 @@ export default ComposedComponent => {
           await getDataFromTree(
             <ApolloProvider client={apollo}>
               <ComposedComponent url={url} {...composedInitialProps} />
-            </ApolloProvider>
+            </ApolloProvider>,
+            {
+              router: {
+                asPath: ctx.asPath,
+                pathname: ctx.pathname,
+                query: ctx.query,
+              },
+            }
           );
         } catch (e) {}
-        Head.rewind();
 
-        const state = apollo.getInitialState();
+        if (!process.browser) Head.rewind();
+
         serverState = {
           apollo: {
-            data: state.data,
+            data: apollo.cache.extract(),
           },
         };
       }
